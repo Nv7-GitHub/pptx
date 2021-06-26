@@ -3,6 +3,7 @@ package pptx
 import (
 	"archive/zip"
 	"fmt"
+	"image/png"
 	"io"
 	"os"
 	// "github.com/beevik/etree"
@@ -25,6 +26,8 @@ type File struct {
 	r         *zip.ReadCloser
 	m         map[string]io.WriterTo // Map of changed or new files.
 	numSlides int
+
+	compression png.CompressionLevel
 }
 
 type dummyReadCloser zip.ReadCloser
@@ -34,10 +37,13 @@ func (z dummyReadCloser) Close() error {
 }
 
 // Open unzips a pptx file, and stores the content in file.
-func Open(filename string) (File, error) {
+func Open(filename string, compression ...png.CompressionLevel) (File, error) {
 	f := File{
 		fileName: filename,
 		tmpName:  filename + "_",
+	}
+	if len(compression) > 0 {
+		f.compression = compression[0]
 	}
 	if r, err := zip.OpenReader(filename); err != nil {
 		return f, err

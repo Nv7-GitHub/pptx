@@ -132,7 +132,10 @@ func (s *Slide) addImageRef(im Image, imageNum int) (image.Image, error) {
 func (f *File) addImageFile(m image.Image, imageNum, slideNum int) error {
 	imagePath := fmt.Sprintf("ppt/media/slide%dimage%d.png", slideNum, imageNum)
 	var b bytes.Buffer
-	if err := png.Encode(&b, m); err != nil {
+	enc := png.Encoder{
+		CompressionLevel: f.compression,
+	}
+	if err := enc.Encode(&b, m); err != nil {
 		return fmt.Errorf("slide %d image %d: %s", slideNum, imageNum, err)
 	}
 	f.m[imagePath] = &b
