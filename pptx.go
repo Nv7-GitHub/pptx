@@ -1,10 +1,11 @@
 package pptx
 
 import (
-	"archive/zip"
 	"fmt"
 	"io"
 	"os"
+
+	"github.com/klauspost/compress/zip"
 	// "github.com/beevik/etree"
 )
 
